@@ -1,5 +1,6 @@
 import sys
 
+
 def writeOutFile(fastaFile, list_sequences, outputFile):
 	writer = open(outputFile, 'wt')
 
@@ -62,22 +63,40 @@ def getSequences(fastaFile, sequencesListFile, outputFile):
 
 	return outputFile, number_sequences, number_bases
 
+
 def getHeaders(filename):
 
-	headers_to_remove=[]
-	headers_to_keep=[]
-	size=0
+	headers_to_remove = []
+	headers_to_keep = []
+	size = 0
+
+	# locate SPAdes length and coverage field
+	length_field = None
+	coverage_field = None
 	with open(filename, "r") as fastaFile:
 		for line in fastaFile:
 			if line.startswith('>'):
-				items=line.split('_')
-				if int(items[4])<200 or float(items[6])<5:
+				items = line.splitlines()[0].split('_')
+				for i in range(0, len(items)):
+					if items[i] == 'NODE':
+						if items[i + 2] == 'length' and items[i + 4] == 'cov':
+							length_field = i + 3
+							coverage_field = i + 5
+							break
+	if length_field is None:
+		sys.exit('Sequences headers not SPAdes formated')
+
+	with open(filename, "r") as fastaFile:
+		for line in fastaFile:
+			if line.startswith('>'):
+				items = line.split('_')
+				if int(items[length_field]) < 200 or float(items[coverage_field]) < 5:
 					headers_to_remove.append(line)
-					length=items[4]
-					size+=int(length)
+					length = items[length_field]
+					size += int(length)
 				else:
-					line=line.split('>')
-					line=line[1].strip()
+					line = line.split('>')
+					line = line[1].strip()
 					headers_to_keep.append(line)
 
 	print ('Number of contigs to remove: %s') % (str(len(headers_to_remove)))
@@ -86,11 +105,12 @@ def getHeaders(filename):
 
 	return headers_to_keep
 
-def main():
-	fastaFile=sys.argv[1]
-	outputFile=sys.argv[2]
 
-	sequencesListFile=getHeaders(fastaFile)
+def main():
+	fastaFile = sys.argv[1]
+	outputFile = sys.argv[2]
+
+	sequencesListFile = getHeaders(fastaFile)
 
 	getSequences(fastaFile, sequencesListFile, outputFile)
 
