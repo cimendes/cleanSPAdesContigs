@@ -76,7 +76,7 @@ def getHeaders(filename):
 	with open(filename, "r") as fastaFile:
 		for line in fastaFile:
 			if line.startswith('>'):
-				items = line.splitlines().split('_')
+				items = line.splitlines()[0].split('_')
 				for i in range(0, len(items)):
 					if items[i] == 'NODE':
 						if items[i + 2] == 'length' and items[i + 4] == 'cov':
