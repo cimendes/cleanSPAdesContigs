@@ -10,8 +10,8 @@ cleanSPAdesContigs has no dependencies
 
 # Instalation
 cleanSPAdesContigs is a standalone python script and does not require any installation. Simply clone the git repository:
-```git clone https://github.com/cimendes/cleanSPAdesContigs.git´´´
+    git clone https://github.com/cimendes/cleanSPAdesContigs.git
 
 # Usage
-```python cleanSpadesContigs.py <contig to clean> <name of the output file>´´´
+    python cleanSpadesContigs.py <contig to clean> <name of the output file>
 
