@@ -71,7 +71,7 @@ def getHeaders(filename):
 		for line in fastaFile:
 			if line.startswith('>'):
 				items=line.split('_')
-				if int(items[4])<200 or float(items[6])<10:
+				if int(items[4])<200 or float(items[6])<5:
 					headers_to_remove.append(line)
 					length=items[4]
 					size+=int(length)
